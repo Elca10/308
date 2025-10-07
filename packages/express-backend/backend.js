@@ -48,18 +48,35 @@ const users = {
   ]
 };
 
+
+
 const findUserByName = (name) => {
   return users["users_list"].filter(
     (user) => user["name"] === name
   );
 };
 
+
+const findUsersByNameAndJob = (name, job) => {
+    return users["users_list"].filter(
+      (user) => user["name"] === name && user["job"] === job
+    );
+  }
+
+
 app.get("/users", (req, res) => {
   const name = req.query.name;
+  const job = req.query.job;
   if (name != undefined) {
+    if (job != undefined) {
+        let result = findUsersByNameAndJob(name, job);
+        result = { users_list: result };
+        res.send(result);
+        return;
+    } else {
     let result = findUserByName(name);
     result = { users_list: result };
-    res.send(result);
+    res.send(result);}
   } else {
     res.send(users);
   }
