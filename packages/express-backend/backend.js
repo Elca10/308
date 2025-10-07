@@ -79,14 +79,34 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+// TODO: implement an additional action to get all users that match a given name and a given job
+
 
 const addUser = (user) => {
+  user["id"] = Math.floor((Math.random()*1000000)).toString();
   users["users_list"].push(user);
   return user;
 };
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const addedUser = addUser(userToAdd);
+  res.status(201).json(addedUser);
+});
+
+
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  let userID = findUserById(id);
+
+  if (userID === undefined) {
+    res.status(404).send("No such user exists.");
+  } else {
+    //console.log(userID);
+    users["users_list"] = users["users_list"].filter(
+      (user) => user["id"] !== id
+    );
+    //console.log(users);
+    res.status(204).send();
+  }
 });

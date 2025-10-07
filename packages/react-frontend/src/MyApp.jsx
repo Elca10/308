@@ -6,15 +6,38 @@ function MyApp() {
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
+    const userId = characters[index]["id"];
+
+    fetch(`http://localhost:8000/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(characters[index]),
+    })
+    .then((response) => {
+        if (response.status === 404) {
+            throw new Error("No such user exists.");
+        } else {
+            const updated = characters.filter((character, i) => {
+                return i !== index;
+            });
+            setCharacters(updated);
+        }
+    }).catch((error) => {
+        console.log(error);
     });
-    setCharacters(updated);
   };
 
     function updateList(person) { 
         postUser(person)
-        .then(() => setCharacters([...characters, person]))
+        .then((response) => {
+            if (response.status !== 201) {
+                throw new Error("Could not add user.");
+            } else {
+                return response.json(); // backend returns successful new user info
+            }})
+        .then((newUser) => setCharacters([...characters, newUser]))
         .catch((error) => {
             console.log(error);
         })
@@ -33,7 +56,7 @@ function MyApp() {
     }, [] );
 
   function postUser(person) {
-    const promise = fetch("Http://localhost:8000/users", {
+    const promise = fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
