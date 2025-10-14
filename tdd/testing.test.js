@@ -1,3 +1,14 @@
+// REFLECTION:
+/* I was able to follow the test-first approach for this assignment. 
+I've done test-driven development to some extent for previous 
+projects, but I've never done it so deliberately and consciously. 
+After the first couple iterations of the cycle, it started 
+feeling a bit tedious, and so I experimented with trying to write
+multiple tests at a time and then implementing them (grouping the
+increments). While it saved me a lot of switching back and forth, 
+it was harder to remember what I had and hadn't implemented. */
+
+
 const functions = require('./stockPortfolio.js');
 
 const portfolio = new functions.stockPortfolio();
